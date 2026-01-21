@@ -8,6 +8,12 @@
 
 {% comment %} <h1 class="hello-world" style="color: {{ section.settings.font_color }}">{{ section.settings.title }}</h1> {% endcomment %}
 {% for block in section.blocks %}
+    {% case block.type %}
+    {% when 'title' %}
+        <h2 style="background-color:{{ block.settings.bg_col }}; color:{{ block.settings.font_color }}" > TITLE </h2>
+    {% when 'subtitle' %}
+        <h6 style="background-color:{{ block.settings.bg_col }}; color:{{ block.settings.font_color }}" > SUBTITLE</h6>
+    {% endcase  %}
   <h3>{{ block.type }}</h3>
 {% endfor %}
 
