@@ -1,19 +1,21 @@
-{% comment %} {% style %}
-  .hello-world{
-      background-color:{{ section.settings.bg_color }};
-  }
-{% endstyle %} {% endcomment %}
+{% comment %}
+  {% style %}
+    .hello-world{
+        background-color:{{ section.settings.bg_color }};
+    }
+  {% endstyle %}
+{% endcomment %}
 
 {% comment %} <h1 class="hello-world" style="color: {{ section.settings.font_color }}">{{ section.settings.title }}</h1> {% endcomment %}
 {% for block in section.blocks %}
-    <h3>{{ block.type }}</h3>
+  <h3>{{ block.type }}</h3>
 {% endfor %}
 
 {% schema %}
 {
   "name": "new World",
   "class": "new-section-hello-world",
-  
+
   "settings": [
     {
       "type": "text",
@@ -37,35 +39,62 @@
   ],
   "blocks": [
     {
-    "type":"title",
-    "name":"Title",
-    "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Hello World",
-      "info": "this is hellow world info"
+      "type": "title",
+      "name": "Title",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Hello World",
+          "info": "this is hellow world info"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "font_color",
+          "label": "Font Color",
+          "default": "#ffffff"
+        }
+      ]
     },
     {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "font_color",
-      "label": "Font Color",
-      "default": "#ffffff"
-    }
-  ]
+    
+        "type": "subtitle",
+      "name": "Subtitle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Hello World",
+          "info": "this is hellow world info"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "font_color",
+          "label": "Font Color",
+          "default": "#ffffff"
+        }
+      ]
+
     }
   ],
-   "presets": [
+  "presets": [
     {
       "name": "hello world"
     }
-  ],
+  ]
 }
 {% endschema %}
