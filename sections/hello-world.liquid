@@ -1,41 +1,41 @@
 {% style %}
-.hello-world{
-    background-color:{{ section.settings.bg_color }};
-}
+  .hello-world{
+      background-color:{{ section.settings.bg_color }};
+  }
 {% endstyle %}
 
-<h1 class="hello-world" >{{section.settings.title}}</h1>
+<h1 class="hello-world" style={{ section.settings.font_color }}>{{ section.settings.title }}</h1>
 
 {% schema %}
-
 {
-
-    "name": "new World",
-    "class": "new-section-hello-world",
-    "limit": 1,
-    "settings": [
-        {
-        "type":"text",
-        "id":"title",
-        "label":"Title",
-        "default":"Hello World",
-        "info": "this is hellow world info"
-
-        },
-        {
-  "type": "color",
-  "id": "bg_color",
-  "label": "Background Color",
-  "default": "#000000"
+  "name": "new World",
+  "class": "new-section-hello-world",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Hello World",
+      "info": "this is hellow world info"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "hello world"
+    }
+  ]
 }
-    ],
-    "presets": [
-        { 
-            "name": "hello world"
-        
-        }
-    ]
-
-}
-
 {% endschema %}
