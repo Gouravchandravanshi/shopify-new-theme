@@ -124,7 +124,7 @@
       "name": "hello world",
       "settings": {
         "title": "Hello World",
-        "body_text": "#b43333"
+        "bg_color": "#f20505"
       }
     }
   },
