@@ -5,7 +5,7 @@
 {% endstyle %}
 
 <h1 class="hello-world" style="color: {{ section.settings.font_color }}">{{ section.settings.title }}</h1>
-<h6>{{ section.blocks.heading }}</h6>
+<h6>{{ section.blocks.title }}</h6>
 
 {% schema %}
 {
@@ -40,17 +40,29 @@
   ],
   "blocks": [
     {
-    "type":"heading",
-    "name":"Heading",
+    "type":"title",
+    "name":"Title",
     "settings": [
-        {
-        "type" :"text",
-        "id": "heading",
-        "label": "Heading",
-        "default":"Helow world"
-        }
-        
-    ]
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Hello World",
+      "info": "this is hellow world info"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font Color",
+      "default": "#ffffff"
+    }
+  ]
     }
   ]
 }
