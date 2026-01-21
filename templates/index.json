@@ -122,7 +122,10 @@
     "hello_world_498H4T": {
       "type": "hello-world",
       "name": "hello world",
-      "settings": {}
+      "settings": {
+        "title": "Hello World",
+        "body_text": "#b43333"
+      }
     }
   },
   "order": [
