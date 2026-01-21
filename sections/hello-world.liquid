@@ -1,17 +1,19 @@
-{% style %}
+{% comment %} {% style %}
   .hello-world{
       background-color:{{ section.settings.bg_color }};
   }
-{% endstyle %}
+{% endstyle %} {% endcomment %}
 
-<h1 class="hello-world" style="color: {{ section.settings.font_color }}">{{ section.settings.title }}</h1>
-<h6>{{ section.blocks.title }}</h6>
+{% comment %} <h1 class="hello-world" style="color: {{ section.settings.font_color }}">{{ section.settings.title }}</h1> {% endcomment %}
+{% for block in section.blocks %}
+    <h3>{{ block.type }}</h3>
+{% endfor %}
 
 {% schema %}
 {
   "name": "new World",
   "class": "new-section-hello-world",
-  "limit": 1,
+  
   "settings": [
     {
       "type": "text",
@@ -31,11 +33,6 @@
       "id": "font_color",
       "label": "Font Color",
       "default": "#ffffff"
-    }
-  ],
-  "presets": [
-    {
-      "name": "hello world"
     }
   ],
   "blocks": [
@@ -64,6 +61,11 @@
     }
   ]
     }
-  ]
+  ],
+   "presets": [
+    {
+      "name": "hello world"
+    }
+  ],
 }
 {% endschema %}
