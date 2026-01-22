@@ -103,11 +103,20 @@
             "text": "<p></p>{{ product.metafields.custom.influencers.value.description | metafield_tag }}",
             "text_style": "body"
           }
+        },
+        "button_jwYH7m": {
+          "type": "button",
+          "settings": {
+            "button_label": "Check Details",
+            "button_link": "{{ product.metafields.custom.influencers.value.system.url }}",
+            "button_style_secondary": false
+          }
         }
       },
       "block_order": [
         "heading_rxA4zr",
-        "text_HPXXBB"
+        "text_HPXXBB",
+        "button_jwYH7m"
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
