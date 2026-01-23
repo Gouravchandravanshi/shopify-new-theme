@@ -1,1 +1,4 @@
 <p> {{ product.selected_or_first_available_variant.metafields.custom.delivery_date }} </p>
+{% if product.selected_or_first_available_variant.metafields.custom.delivery_date != blank %}
+<div class="expected-delivery" ><p>Expected Delvivery: {{ product.selected_or_first_available_variant.metafields.custom.delivery_date}}</p></div>    
+{% endif %}
