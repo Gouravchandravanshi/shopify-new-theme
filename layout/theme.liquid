@@ -318,26 +318,31 @@
         super();
         console.log("constructor called")
         };
+
+        connectedCallback(){
+        console.log("Element connected to dom ")
+        }
+
       }
 
       customElements.define("my-custom-element", MyCustomElement);
 
     </script>
 
-    <h3> Hello world From vs code </h3>
+    {% comment %} <h3> Hello world From vs code </h3>
     <pre>
       {%if request.design_mode  %}
         This is design mode
     {% else %}
      This is not design mode  
-    {% endif %}   
+    {% endif %}    {% endcomment %}
     
 
 
     {% comment %} Objects Learning {% endcomment %}
 
 
-    product.title: {{ product.title }}
+    {% comment %} product.title: {{ product.title }}
     collection.title: {{ collection.title }}
     product in collections : {{collections }}
     {% for collection in collections %}
@@ -345,7 +350,7 @@
 {% endfor %}
     {% for product in collections['hydrogen'].products %}
   Hydrogen collection products {{- product.title  }}
-{% endfor %}
+{% endfor %} {% endcomment %}
 
 
 {% comment %} color scheme {{ settings.card_color_scheme }}
@@ -356,11 +361,11 @@
   }
 {% endfor %} {% endcomment %}
 
-iso code is {{ cart.currency.iso_code }}
+{% comment %} iso code is {{ cart.currency.iso_code }}
 customer last name {{customer.last_name }}
 template directory is {{ template.name }}
 
-    </pre>
+    </pre> {% endcomment %}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
