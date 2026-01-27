@@ -1,6 +1,464 @@
+{% doc %}
+  @prompt
+    generate a announcment bar with carousel 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-announcement-bar__wrapper-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.vertical_padding }}px 20px;
+  }
+
+  .ai-announcement-bar__carousel-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-announcement-bar__track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .ai-announcement-bar__slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .ai-announcement-bar__text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.font_size }}px;
+    line-height: 1.4;
+  }
+
+  .ai-announcement-bar__text-{{ ai_gen_id }} a {
+    color: {{ block.settings.link_color }};
+    text-decoration: underline;
+  }
+
+  .ai-announcement-bar__text-{{ ai_gen_id }} a:hover {
+    opacity: 0.8;
+  }
+
+  .ai-announcement-bar__link-{{ ai_gen_id }} {
+    color: {{ block.settings.link_color }};
+    text-decoration: underline;
+    font-size: {{ block.settings.font_size }}px;
+    white-space: nowrap;
+  }
+
+  .ai-announcement-bar__link-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  .ai-announcement-bar__controls-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .ai-announcement-bar__dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: {{ block.settings.text_color }};
+    opacity: 0.3;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-announcement-bar__dot-{{ ai_gen_id }}.active {
+    opacity: 1;
+  }
+
+  .ai-announcement-bar__dot-{{ ai_gen_id }}:hover {
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+    }
+
+    .ai-announcement-bar__link-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<announcement-carousel-{{ ai_gen_id }}
+  class="ai-announcement-bar-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.autoplay }}"
+  data-autoplay-speed="{{ block.settings.autoplay_speed }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-announcement-bar__wrapper-{{ ai_gen_id }}">
+    <div class="ai-announcement-bar__carousel-{{ ai_gen_id }}">
+      <div class="ai-announcement-bar__track-{{ ai_gen_id }}">
+        {% for i in (1..5) %}
+          {% liquid
+            assign announcement_enabled_key = 'announcement_' | append: i | append: '_enabled'
+            assign announcement_text_key = 'announcement_' | append: i | append: '_text'
+            assign announcement_link_key = 'announcement_' | append: i | append: '_link'
+            assign announcement_link_text_key = 'announcement_' | append: i | append: '_link_text'
+
+            assign announcement_enabled = block.settings[announcement_enabled_key]
+            assign announcement_text = block.settings[announcement_text_key]
+            assign announcement_link = block.settings[announcement_link_key]
+            assign announcement_link_text = block.settings[announcement_link_text_key]
+          %}
+
+          {% if announcement_enabled %}
+            <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ forloop.index0 }}">
+              {% if announcement_text != blank %}
+                <div class="ai-announcement-bar__text-{{ ai_gen_id }}">
+                  {{ announcement_text }}
+                </div>
+              {% endif %}
+
+              {% if announcement_link != blank and announcement_link_text != blank %}
+                <a href="{{ announcement_link }}" class="ai-announcement-bar__link-{{ ai_gen_id }}">
+                  {{ announcement_link_text }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% assign enabled_count = 0 %}
+    {% for i in (1..5) %}
+      {% liquid
+        assign announcement_enabled_key = 'announcement_' | append: i | append: '_enabled'
+        assign announcement_enabled = block.settings[announcement_enabled_key]
+      %}
+      {% if announcement_enabled %}
+        {% assign enabled_count = enabled_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+
+    {% if enabled_count > 1 %}
+      <div class="ai-announcement-bar__controls-{{ ai_gen_id }}">
+        {% for i in (1..enabled_count) %}
+          <button
+            class="ai-announcement-bar__dot-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-slide="{{ forloop.index0 }}"
+            aria-label="Go to announcement {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</announcement-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-announcement-bar__track-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-announcement-bar__slide-{{ ai_gen_id }}');
+        this.dots = this.querySelectorAll('.ai-announcement-bar__dot-{{ ai_gen_id }}');
+        this.autoplay = this.dataset.autoplay === 'true';
+        this.autoplaySpeed = parseInt(this.dataset.autoplaySpeed) * 1000;
+
+        if (this.slides.length === 0) return;
+
+        this.setupEventListeners();
+
+        if (this.autoplay && this.slides.length > 1) {
+          this.startAutoplay();
+        }
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+
+      setupEventListeners() {
+        this.dots.forEach((dot) => {
+          dot.addEventListener('click', () => {
+            const slideIndex = parseInt(dot.dataset.slide);
+            this.goToSlide(slideIndex);
+            this.stopAutoplay();
+          });
+        });
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        const offset = -100 * index;
+        this.track.style.transform = `translateX(${offset}%)`;
+
+        this.dots.forEach((dot, i) => {
+          if (i === index) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      nextSlide() {
+        const nextIndex = (this.currentSlide + 1) % this.slides.length;
+        this.goToSlide(nextIndex);
+      }
+
+      startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, this.autoplaySpeed);
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+    }
+
+    customElements.define('announcement-carousel-{{ ai_gen_id }}', AnnouncementCarousel{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Announcement carousel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Carousel settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Announcement 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_1_enabled",
+      "label": "Enable announcement 1",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_1_text",
+      "label": "Text",
+      "default": "<p>Welcome to our store</p>"
+    },
+    {
+      "type": "url",
+      "id": "announcement_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "announcement_1_link_text",
+      "label": "Link text",
+      "default": "Shop now"
+    },
+    {
+      "type": "header",
+      "content": "Announcement 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_2_enabled",
+      "label": "Enable announcement 2",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_2_text",
+      "label": "Text",
+      "default": "<p>Free shipping on orders over $50</p>"
+    },
+    {
+      "type": "url",
+      "id": "announcement_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "announcement_2_link_text",
+      "label": "Link text",
+      "default": "Learn more"
+    },
+    {
+      "type": "header",
+      "content": "Announcement 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_3_enabled",
+      "label": "Enable announcement 3",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_3_text",
+      "label": "Text",
+      "default": "<p>New arrivals just dropped</p>"
+    },
+    {
+      "type": "url",
+      "id": "announcement_3_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "announcement_3_link_text",
+      "label": "Link text",
+      "default": "View collection"
+    },
+    {
+      "type": "header",
+      "content": "Announcement 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_4_enabled",
+      "label": "Enable announcement 4",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_4_text",
+      "label": "Text"
+    },
+    {
+      "type": "url",
+      "id": "announcement_4_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "announcement_4_link_text",
+      "label": "Link text"
+    },
+    {
+      "type": "header",
+      "content": "Announcement 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_5_enabled",
+      "label": "Enable announcement 5",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_5_text",
+      "label": "Text"
+    },
+    {
+      "type": "url",
+      "id": "announcement_5_link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "announcement_5_link_text",
+      "label": "Link text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement carousel"
+    }
+  ]
+}
 {% endschema %}
