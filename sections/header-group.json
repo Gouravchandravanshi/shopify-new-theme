@@ -53,10 +53,80 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "1769499383d9e5bd9d": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_c2ca2db_k69ECg": {
+          "type": "ai_gen_block_c2ca2db",
+          "settings": {
+            "background_color": "#121212",
+            "text_color": "#ffffff",
+            "link_color": "#ffffff",
+            "font_size": 14,
+            "vertical_padding": 12,
+            "max_width": 1200,
+            "autoplay": true,
+            "autoplay_speed": 5,
+            "announcement_1_enabled": true,
+            "announcement_1_text": "<p>Welcome to our store</p>",
+            "announcement_1_link": "",
+            "announcement_1_link_text": "Shop now",
+            "announcement_2_enabled": true,
+            "announcement_2_text": "<p>Free shipping on orders over $50</p>",
+            "announcement_2_link": "",
+            "announcement_2_link_text": "Learn more",
+            "announcement_3_enabled": true,
+            "announcement_3_text": "<p>New arrivals just dropped</p>",
+            "announcement_3_link": "",
+            "announcement_3_link_text": "View collection",
+            "announcement_4_enabled": false,
+            "announcement_4_text": "",
+            "announcement_4_link": "",
+            "announcement_4_link_text": "",
+            "announcement_5_enabled": false,
+            "announcement_5_text": "",
+            "announcement_5_link": "",
+            "announcement_5_link_text": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_c2ca2db_k69ECg"
+      ],
+      "settings": {}
+    },
+    "announcement_bar_43kCRA": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_YjCfhG": {
+          "type": "announcement",
+          "settings": {
+            "text": "Welcome to our store",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_YjCfhG"
+      ],
+      "name": "t:sections.announcement-bar.presets.name",
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "announcement_bar_43kCRA",
+    "header",
+    "1769499383d9e5bd9d"
   ]
 }
